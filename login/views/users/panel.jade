@@ -1,0 +1,76 @@
+extends ../templates/default-admin
+
+block content
+
+  p= 'Hola... ' + user.nombre
+
+
+  div.container-fluid
+    div.row
+      div.col-md-8
+        article
+          table
+            tr
+              td
+                table
+                  tr
+                    td
+                      span(style='color: #FF0004') Battery : 
+                      span#battery-value
+                      .bar.color0
+                        span#battery-indicator(style='width:50%')
+                  tr
+                    td
+                      h1(style='color:#FF00FD; background-color:#FFFD00') Ar Drone Parrot Feed
+                        #placeholder
+                        img(src='http://localhost:8000')
+
+            tr
+              td#bt
+                table(style='width: 100%')
+                  tr
+                    td
+                      p
+                        | Comandos
+                      button#takeoff Despegar
+                      button#land Aterrizar
+                      button#cw RotDer
+                      button#ccw RotIzq
+                  tr
+                    td
+                      button#up Elevar
+                      button#down Descender
+                      button#stop Hover
+                      button#foto Foto
+                      button#ms Ruta
+                  tr
+                    td
+                      p
+                        | Dirreccion
+                      button#right Derecha
+                      button#left Izquierda
+                      button#front Adelante
+                      button#back Atras
+      
+
+      //- script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAb8K-C4M8BBtzmy2-L-0-1zIzkGyX-tDU&callback=myMap")
+      div.col-md-4
+        article
+          #map(style='width:100%;height:500px')
+
+  div.row
+    div.col-md-12
+      p#DevBy(style='margin-top: 50px;') Desarrollado por Pedro Lizardo 2007-2437.
+
+  script.
+    function myMap() {
+      var mapCanvas = document.getElementById("map");
+      var mapOptions = {
+        center: new google.maps.LatLng(51.5, -0.2),
+        zoom: 5
+      }
+      var map = new google.maps.Map(mapCanvas, mapOptions);
+    }
+
+  //- script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBu-916DdpKAjTmJNIgngS6HL_kDIKU0aU&callback=myMap')
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAb8K-C4M8BBtzmy2-L-0-1zIzkGyX-tDU&callback=myMap')

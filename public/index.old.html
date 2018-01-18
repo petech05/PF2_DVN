@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Drone Vigilancia Nocturna</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+    <script src="leaflet.js"></script>
+    <script src="gamepad-client.js"></script>
+    <script src="gamepad-calibration.js"></script>
+    <script src="leaflet-google.js"></script>
+    <script type="text/javascript" src="jquery.fullscreen-min.js"></script>
+  <script type="text/javascript" src="polyfills.js"></script>
+  <script type="text/javascript" src="cockpit.js"></script>
+    <script src="nodecopter-client.js"></script>
+    <script src="socket.io.min.js"></script>
+    <script src="jquery.min.js"></script>
+    <script>
+        $(function () {
+
+           /* function startArDRoneStream() {
+                new NodecopterStream(document.getElementById("placeholder"), {port: 3001});
+            }
+
+            function startCameraFeed() {
+                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+                var constraints = {audio: false, video: true};
+                var video = document.querySelector("video");
+
+                function successCallback(stream) {
+                    window.stream = stream; // stream available to console
+                    if (window.URL) {
+                        video.src = window.URL.createObjectURL(stream);
+                    } else {
+                        video.src = stream;
+                    }
+                    video.play();
+                }
+
+                function errorCallback(error){
+                    console.log("navigator.getUserMedia error: ", error);
+                }
+
+                navigator.getUserMedia(constraints, successCallback, errorCallback);
+
+            }*/
+            function startArDroneController(){
+                var socket = io.connect('http://localhost:3002');
+                socket.on('connect', function () { // TIP: you can avoid listening on `connect` and listen on events directly too!
+                    console.log("Connection Successful");
+
+                });
+
+                socket.on('event', function (data) {
+
+                    if(data.name=="battery"){
+                        $("#battery-indicator").css('width',data.value+'%');
+                        $("#battery-value").html(data.value+'%');
+                    }
+                });
+
+                $("#takeoff").click(function(){
+                    console.log("Asking Server to send takeoff command to Ar Drone");
+                    socket.emit('event',{name:"takeoff"});
+                });
+                $("#cw").click(function(){
+                    console.log("Asking Server to send rotate right rutine to Ar Drone");
+                    socket.emit('event',{name:"cw"});
+                });
+                $("#stop").click(function(){
+                    console.log("Asking Server to send stop command to Ar Drone");
+                    socket.emit('event',{name:"stop"});
+                });
+                $("#land").click(function(){
+                    console.log("Asking Server to send land command to Ar Drone");
+                    socket.emit('event',{name:"land"});
+                });
+                $("#up").click(function(){
+                    console.log("Asking Server to send up command to Ar Drone");
+                    socket.emit('event',{name:"up"});
+                });
+                $("#down").click(function(){
+                    console.log("Asking Server to send down command to Ar Drone");
+                    socket.emit('event',{name:"down"});
+                });
+                $("#right").click(function(){
+                    console.log("Asking Server to send right command to Ar Drone");
+                    socket.emit('event',{name:"right"});
+                });
+                $("#left").click(function(){
+                    console.log("Asking Server to send left command to Ar Drone");
+                    socket.emit('event',{name:"left"});
+                });
+                $("#front").click(function(){
+                    console.log("Asking Server to send front command to Ar Drone");
+                    socket.emit('event',{name:"front"});
+                });
+                $("#back").click(function(){
+                    console.log("Asking Server to send back command to Ar Drone");
+                    socket.emit('event',{name:"back"});
+                });
+                $("#foto").click(function(){
+                    console.log("Asking Server to send take phone to Ar Drone");
+                    socket.emit('event',{name:"foto"});
+                });
+                $("#video").click(function(){
+                    console.log("Asking Server to send take video to Ar Drone");
+                    socket.emit('event',{name:"video"});
+                });
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "97") //a
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"left"});
+                    }
+                }); 
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "100") //d
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"right"});
+                    }
+                }); 
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "119") //w
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"front"});
+                    }
+                }); 
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "115") //s
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"back"});
+                    }
+                }); 
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "116") //t
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"takeoff"});
+                    }
+                });
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "108") //l
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"land"});
+                    }
+                });
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "112") //p
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"stop"});
+                    }
+                });
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "117") //u
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"up"});
+                    }
+                });
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "106") //j
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"down"});
+                    }
+                });
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "102") //f
+                    {
+                        console.log("Asking Server to take a photo command to Ar Drone");
+                            socket.emit('event',{name:"foto"});
+                    }
+                });
+
+                $(document).keypress(function (event)
+                {
+                    if (event.which == "114") //r
+                    {
+                        console.log("Asking Server to send left command to Ar Drone");
+                            socket.emit('event',{name:"cw"});
+                    }
+                });
+
+
+            }
+           // startArDRoneStream();
+            //startCameraFeed();
+            startArDroneController();
+
+        })
+    </script>
+    <style>
+
+        td {
+            border:1px solid black;
+            border-radius:10px;
+            padding:10px;
+        }
+        button{
+            font-size: 10pt;
+        }
+
+        #battery{
+            border:1px solid black;
+            width:500px;
+            height:20px;
+            text-align: center;
+        }
+        .bar {
+            margin: 5px 0 3px;
+            border: 6px solid #333;
+            background: #333;
+            overflow: hidden;
+            border-radius: 50px;
+            -moz-border-radius: 50px;
+            -webkit-border-radius: 50px;
+            box-shadow: 1px 1px 1px #777;
+            -moz-box-shadow: 1px 1px 1px #777;
+            -webkit-box-shadow: 1px 1px 1px #777;
+        }
+        .bar > span {
+            display: block;
+            height: 20px;
+            border-radius: 5px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+        }
+        .color0 > span {
+            background-color: #FF0000;
+        }
+
+       </style>
+<style type="text/css"> 
+body{ 
+background-image: url(); 
+background-position : right; 
+background-repeat : no-repeat; 
+background-attachment : fixed; 
+
+} 
+</style> 
+
+</head>
+<body>
+<h1 style="color: #FF0004; text-align:center; background-color: #D3F735">DVN Panel de Control</h1>
+<h2 style="color:navy; text-align:left 10px; background-color:#9CFC89">Desarrollado por Pedro Lizardo 2007-2437.</h4>
+<table>
+    
+<tr>
+<td>
+
+<table>
+<tr>
+    <td>
+            <span style="color: #FF0004">Battery : </span> <span id="battery-value"></span>
+            <div class="bar color0">
+                <span id="battery-indicator" style="width:50%"></span>
+            </div>
+    </td>
+</tr>
+       
+        
+    <tr>
+        <td>
+            <h1 style="color:#FF00FD; background-color:#FFFD00">Ar Drone Parrot Feed</h1>
+            <div id="placeholder"><img src="http://localhost:3005" /></div>
+        </td>
+</table>
+</td>
+<td background="DVN.jpg">
+<table>
+
+        <tr>
+        <td >
+            <button id="takeoff">Despegar</button>
+            <button id="cw">RotDer</button>
+            <button id="stop">Hover</button>
+            <button id="foto">Foto</button>
+            
+            </td>
+        </tr>
+
+     
+            <tr>
+            <td>
+            
+            <button id="land">Aterrizar</button>
+            <button id="up">Elevar</button>
+            <button id="down">Descender</button>
+            <button id="video">Video</button>
+            
+            </td>
+            </tr>
+            <tr>
+            <td>
+            
+            <button id="right">Derecha</button>
+            <button id="left">Izquierda</button>
+            <button id="front">Adelante</button>
+            <button id="back">Atras</button>
+           
+
+        </td>
+        </tr>
+
+    </table>
+    </td>
+    </tr>
+</table>
+
+</body>
+</html>

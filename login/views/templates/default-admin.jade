@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css")
+    script(src="https://code.jquery.com/jquery-2.2.3.min.js")  
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
+    //- script(src="/javascripts/leaflet.js")
+    //- script(src="/javascripts/gamepad-client.js")
+    //- script(src="/javascripts/gamepad-calibration.js")
+    //- script(src="/javascripts/leaflet-google.js")
+    script(src="/javascripts/jquery.fullscreen-min.js")
+    script(src="/javascripts/polyfills.js")
+    script(src="/javascripts/cockpit.js")
+    script(src="/javascripts/nodecopter-client.js")
+    script(src="/javascripts/socket.io.min.js")
+    script(src="/javascripts/core.js")
+    
+  body
+    include nav
+    block content
